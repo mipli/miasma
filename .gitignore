@@ -1,0 +1,5 @@
+savegame
+/target/
+**/target/
+**/*.rs.bk
+./savegame

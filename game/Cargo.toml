@@ -1,0 +1,11 @@
+[package]
+name = "quicksilver-roguelike"
+version = "0.1.0"
+authors = ["Tomas Sedovic <tomas@sedovic.cz>"]
+edition = "2018"
+
+[dependencies]
+# More features: "collisions", "complex_shapes", "immi_ui", "sounds", "gamepads"
+quicksilver = { version = "0.3.6", default-features = false, features = ["fonts", "saving"]}
+mint = "*"
+fluid_dynamics = { path = "../fluid-dynamics" }

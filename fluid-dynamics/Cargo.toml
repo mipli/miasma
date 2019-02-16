@@ -1,0 +1,8 @@
+[package]
+name = "fluid_dynamics"
+version = "0.1.0"
+authors = ["Michael A. Plikk <michael@aptoma.com>"]
+edition = "2018"
+
+[dependencies]
+mint = "0.5"
