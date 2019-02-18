@@ -1,8 +1,6 @@
 use mint::Point2;
 use std::str::FromStr;
 
-use fluid_dynamics::ConnectionGrid;
-
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tile {
     Floor,
@@ -112,51 +110,5 @@ impl<'a> Iterator for MapIterator<'a> {
         let tile = self.map.tiles.get(self.next)?;
         self.next += 1;
         Some(([x, y].into(), *tile))
-    }
-}
-
-
-impl ConnectionGrid for Map {
-    fn get_connections<T: Into<Point2<usize>>>(&self, pos: T) -> Vec<Point2<usize>> {
-        let point = pos.into();
-        let mut connections = vec![];
-        if point.x != 0 {
-            let nx = (point.x - 1) as usize;
-            let ny = point.y as usize;
-            if self.tiles.get(self.index([nx, ny])) == Some(&Tile::Floor) {
-                connections.push([point.x - 1, point.y].into());
-            }
-        }
-        if point.y != 0 {
-            let nx = point.x as usize;
-            let ny = (point.y - 1) as usize;
-            if self.tiles.get(self.index([nx, ny])) == Some(&Tile::Floor) {
-                connections.push([point.x, point.y - 1].into());
-            }
-        }
-        if point.x < self.width - 1 {
-            let nx = (point.x + 1) as usize;
-            let ny = point.y as usize;
-            if self.tiles.get(self.index([nx, ny])) == Some(&Tile::Floor) {
-                connections.push([point.x + 1, point.y].into());
-            }
-        }
-        if point.y < self.height - 1 {
-            let nx = point.x as usize;
-            let ny = (point.y + 1) as usize;
-            if self.tiles.get(self.index([nx, ny])) == Some(&Tile::Floor) {
-                connections.push([point.x, point.y + 1].into());
-            }
-        }
-        connections
-    }
-
-    fn is_solid<T: Into<Point2<usize>>>(&self, pos: T) -> bool {
-        let pos = pos.into();
-        if pos.x >= self.width || pos.y >= self.height {
-            return true;
-        }
-        let idx = self.index(pos);
-        self.tiles.get(idx) == Some(&Tile::Wall) || self.tiles.get(idx) == None
     }
 }

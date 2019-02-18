@@ -340,5 +340,4 @@ mod basic_flow {
 
         assert_fluid_eq(grid.total_fluid_level(), 200f32);
     }
-
 }
