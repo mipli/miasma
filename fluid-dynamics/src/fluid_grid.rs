@@ -125,8 +125,7 @@ impl FluidGrid {
 
         for x in 0..self.width {
             for y in 0..self.height {
-                let point: Point2<usize> = [x, y].into();
-                let idx = self.index(&point);
+                let idx = self.index(&[x, y].into());
                 let connections = connection_grid.get_connections([x, y]);
                 let flow_connections = connections
                     .iter()
@@ -135,15 +134,15 @@ impl FluidGrid {
                             Some(f) if *f > 0f32 => {
                                 let i = self.index(&pos);
                                 let v = self.velocity[i];
-                                let vx: Point2<i32> = [pos.x as i32 + v.x, pos.y as i32 + v.y].into();
+                                let vel_pos: Point2<i32> = [pos.x as i32 + v.x, pos.y as i32 + v.y].into();
                                 let connection_count = connection_grid.get_connections([pos.x, pos.y]).len();
-                                let flow = f.clone() / 4f32;
-                                if v.x == 0i32 && v.y == 0i32 || connection_count != 4 {
-                                    Some((pos.clone(), flow))
-                                } else if vx.x == x as i32 && vx.y == y as i32 {
-                                    Some((pos.clone(), 4f32 * 5f32 * (flow / 8f32)))
+                                let flow_per_connection = f / 5f32;
+                                if v == [0, 0].into() || connection_count != 4 {
+                                    Some((pos.clone(), flow_per_connection))
+                                } else if vel_pos == [x as i32, y as i32].into() {
+                                    Some((pos.clone(), 5f32 * 5f32 * (flow_per_connection / 10f32)))
                                 } else {
-                                    Some((pos.clone(), 4f32 * (flow / 8f32)))
+                                    Some((pos.clone(), 5f32 * (flow_per_connection / 10f32)))
                                 }
                             },
                             _ => None
@@ -155,10 +154,10 @@ impl FluidGrid {
                     .map(|(_, f)| *f)
                     .sum();
                 if connection_grid.is_solid([x, y]) {
-                    pressure[idx] = in_flow * 4f32;
+                    pressure[idx] = in_flow * 5f32;
                 } else {
                     pressure[idx] = 0f32;
-                    let out_flow: f32 = self.fluid[idx] / 4f32;
+                    let out_flow: f32 = self.fluid[idx] / 5f32;
                     let out_flow = out_flow * connections.len() as f32;
                     fluid[idx] = self.fluid[idx] + self.viscocity * (in_flow - out_flow);
 

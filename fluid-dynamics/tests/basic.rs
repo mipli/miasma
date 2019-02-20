@@ -127,9 +127,9 @@ mod basic_flow {
 
         grid.flow(&g);
 
-        assert_eq!(grid.get_fluid([1, 0]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([0, 1]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([0, 0]), Some(&5f32));
+        assert_eq!(grid.get_fluid([1, 0]), Some(&2f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&2f32));
+        assert_eq!(grid.get_fluid([0, 0]), Some(&6f32));
         assert_fluid_eq(grid.total_fluid_level(), 10f32);
     }
 
@@ -137,19 +137,19 @@ mod basic_flow {
     fn flow_in_center() {
         let mut grid = FluidGrid::new(5, 5);
 
-        assert_eq!(grid.set_fluid([2, 2], 10f32), Some(10f32));
-        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+        assert_eq!(grid.set_fluid([2, 2], 15f32), Some(15f32));
+        assert_fluid_eq(grid.total_fluid_level(), 15f32);
 
         let g = Grid::new(5, 5);
 
         grid.flow(&g);
 
-        assert_eq!(grid.get_fluid([2, 2]), Some(&0f32));
-        assert_eq!(grid.get_fluid([1, 2]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([3, 2]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([2, 1]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([2, 3]), Some(&2.5f32));
-        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+        assert_eq!(grid.get_fluid([2, 2]), Some(&3f32));
+        assert_eq!(grid.get_fluid([1, 2]), Some(&3f32));
+        assert_eq!(grid.get_fluid([3, 2]), Some(&3f32));
+        assert_eq!(grid.get_fluid([2, 1]), Some(&3f32));
+        assert_eq!(grid.get_fluid([2, 3]), Some(&3f32));
+        assert_fluid_eq(grid.total_fluid_level(), 15f32);
     }
 
     #[test]
@@ -165,10 +165,10 @@ mod basic_flow {
         grid.flow(&g);
 
         assert_eq!(grid.get_fluid([0, 0]), Some(&10f32)); 
-        assert_eq!(grid.get_fluid([0, 1]), Some(&2.5f32));
-        assert_eq!(grid.get_fluid([1, 0]), Some(&7.5f32)); 
-        assert_eq!(grid.get_fluid([1, 1]), Some(&5f32));
-        assert_eq!(grid.get_fluid([2, 0]), Some(&5f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&2f32));
+        assert_eq!(grid.get_fluid([1, 0]), Some(&10f32)); 
+        assert_eq!(grid.get_fluid([1, 1]), Some(&4f32));
+        assert_eq!(grid.get_fluid([2, 0]), Some(&4f32));
         assert_fluid_eq(grid.total_fluid_level(), 30f32);
     }
 
@@ -278,9 +278,10 @@ mod basic_flow {
         assert_eq!(grid.set_fluid([2, 0], 60f32), Some(60f32));
         grid.flow(&g);
 
-        println!("{:?}", grid);
-        assert_fluid_eq(*grid.get_fluid([2, 0]).unwrap(), 15f32);
-        assert_fluid_eq(*grid.get_fluid([2, 1]).unwrap(), 15f32);
+        assert_fluid_eq(*grid.get_fluid([2, 0]).unwrap(), 24f32);
+        assert_fluid_eq(*grid.get_fluid([2, 1]).unwrap(), 12f32);
+        assert_fluid_eq(*grid.get_fluid([1, 0]).unwrap(), 12f32);
+        assert_fluid_eq(*grid.get_fluid([3, 0]).unwrap(), 12f32);
         assert_fluid_eq(*grid.get_fluid([2, 2]).unwrap(), 0f32);
 
         grid.flow(&g);
@@ -292,15 +293,15 @@ mod basic_flow {
         grid.flow(&g);
         assert!(*grid.get_fluid([2, 0]).unwrap() >= 10f32);
         assert!(*grid.get_fluid([2, 1]).unwrap() > 10f32);
-        assert!(*grid.get_fluid([2, 2]).unwrap() > 4f32);
+        assert!(*grid.get_fluid([2, 2]).unwrap() > 3f32);
         assert!(*grid.get_fluid([2, 3]).unwrap() > 0f32);
         assert_fluid_eq(*grid.get_fluid([2, 4]).unwrap(), 0f32);
 
         grid.flow(&g);
         assert!(*grid.get_fluid([2, 0]).unwrap() >= 10f32);
         assert!(*grid.get_fluid([2, 1]).unwrap() > 9f32);
-        assert!(*grid.get_fluid([2, 2]).unwrap() > 4f32);
-        assert!(*grid.get_fluid([2, 3]).unwrap() > 1f32);
+        assert!(*grid.get_fluid([2, 2]).unwrap() > 3f32);
+        assert!(*grid.get_fluid([2, 3]).unwrap() > 0.2f32);
 
         assert!(*grid.get_fluid([2, 4]).unwrap() > 0f32);
         assert!(*grid.get_fluid([3, 3]).unwrap() > 0f32);
@@ -353,9 +354,9 @@ mod basic_flow {
 
         grid.flow(&g);
 
-        assert_eq!(grid.get_fluid([1, 0]), Some(&1.25f32));
-        assert_eq!(grid.get_fluid([0, 1]), Some(&1.25f32));
-        assert_eq!(grid.get_fluid([0, 0]), Some(&7.5f32));
+        assert_eq!(grid.get_fluid([1, 0]), Some(&1f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&1f32));
+        assert_eq!(grid.get_fluid([0, 0]), Some(&8f32));
         assert_fluid_eq(grid.total_fluid_level(), 10f32);
     }
 
@@ -371,9 +372,9 @@ mod basic_flow {
 
         grid.flow(&g);
 
-        assert_eq!(grid.get_fluid([1, 0]), Some(&3.75f32));
-        assert_eq!(grid.get_fluid([0, 1]), Some(&3.75f32));
-        assert_eq!(grid.get_fluid([0, 0]), Some(&2.50f32));
+        assert_eq!(grid.get_fluid([1, 0]), Some(&3f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&3f32));
+        assert_eq!(grid.get_fluid([0, 0]), Some(&4f32));
         assert_fluid_eq(grid.total_fluid_level(), 10f32);
     }
 }
