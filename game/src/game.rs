@@ -53,9 +53,7 @@ impl GameState {
     }
 
     pub fn flow(&mut self) {
-        for _ in 0..5 {
-            self.miasma.flow(&self.world);
-        }
+        self.miasma.flow(&self.world);
     }
 
     pub fn handle_pressure(&mut self) {
@@ -95,15 +93,17 @@ impl GameState {
 
     pub fn add_door(&mut self, pos: Point2<usize>) {
         let entity = self.world.entity_manager.create_entity();
-        self.world.entity_manager.add_visual(entity, Visual {
-            glyph: '=',
-            foreground: (1f32, 0f32, 1f32, 1f32).into()
-        });
-        self.world.entity_manager.add_physics(entity, Physics {
-            position: pos,
-            hardness: 5,
-            durability: 100
-        });
+        if !self.world.is_solid(pos) {
+            self.world.entity_manager.add_visual(entity, Visual {
+                glyph: '=',
+                foreground: (1f32, 0f32, 1f32, 1f32).into()
+            });
+            self.world.entity_manager.add_physics(entity, Physics {
+                position: pos,
+                hardness: 5,
+                durability: 100
+            });
+        }
     }
 
     fn blit_entities(&self, console: &mut Console) {

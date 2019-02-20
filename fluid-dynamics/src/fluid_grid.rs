@@ -5,6 +5,7 @@ use crate::{ConnectionGrid};
 pub struct FluidGrid {
     width: usize,
     height: usize,
+    viscocity: f32,
     fluid: Vec<f32>,
     pressure: Vec<f32>,
     velocity: Vec<Vector2<i32>>
@@ -15,10 +16,18 @@ impl FluidGrid {
         FluidGrid {
             width,
             height,
+            viscocity: 1f32,
             fluid: vec![0f32; width * height],
             pressure: vec![0f32; width * height],
             velocity: vec![Vector2 { x: 0i32, y: 0i32}; width * height],
         }
+    }
+
+    /*
+     * Setting viscocity higher than 1.0 does not really make sense physcially
+     */
+    pub fn set_viscocity(&mut self, viscocity: f32) {
+        self.viscocity = viscocity;
     }
 
     pub fn dimensions(&self) -> Vector2<usize> {
@@ -151,7 +160,7 @@ impl FluidGrid {
                     pressure[idx] = 0f32;
                     let out_flow: f32 = self.fluid[idx] / 4f32;
                     let out_flow = out_flow * connections.len() as f32;
-                    fluid[idx] = self.fluid[idx] + in_flow - out_flow;
+                    fluid[idx] = self.fluid[idx] + self.viscocity * (in_flow - out_flow);
 
                     if flow_connections.len() == 1 {
                         let dx = x as i32 - flow_connections[0].0.x as i32;

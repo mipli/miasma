@@ -340,4 +340,40 @@ mod basic_flow {
 
         assert_fluid_eq(grid.total_fluid_level(), 200f32);
     }
+
+    #[test]
+    fn viscocity_reduce_flow() {
+        let mut grid = FluidGrid::new(5, 5);
+        grid.set_viscocity(0.5);
+
+        assert_eq!(grid.set_fluid([0, 0], 10f32), Some(10f32));
+        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+
+        let g = Grid::new(5, 5);
+
+        grid.flow(&g);
+
+        assert_eq!(grid.get_fluid([1, 0]), Some(&1.25f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&1.25f32));
+        assert_eq!(grid.get_fluid([0, 0]), Some(&7.5f32));
+        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+    }
+
+    #[test]
+    fn viscocity_increase_flow() {
+        let mut grid = FluidGrid::new(5, 5);
+        grid.set_viscocity(1.5);
+
+        assert_eq!(grid.set_fluid([0, 0], 10f32), Some(10f32));
+        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+
+        let g = Grid::new(5, 5);
+
+        grid.flow(&g);
+
+        assert_eq!(grid.get_fluid([1, 0]), Some(&3.75f32));
+        assert_eq!(grid.get_fluid([0, 1]), Some(&3.75f32));
+        assert_eq!(grid.get_fluid([0, 0]), Some(&2.50f32));
+        assert_fluid_eq(grid.total_fluid_level(), 10f32);
+    }
 }
